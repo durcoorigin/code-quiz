@@ -70,14 +70,34 @@ var codeQuestions = [
             d: "All of the above"
         },
         correctAnswer: "d"
-    },
+    }
 ]
 
 // ****** Build the Quiz
 function buildQuiz() {
+    var output = [];
+    codeQuestions.forEach(
+        (currentQuestion, questionNumber) => {
 
+            var answers = [];
+      
+            for(letter in currentQuestion.answers){
+      
+              answers.push(
+                `<label>
+                  <input type="button" name="question${questionNumber}" value="${currentQuestion.answers[letter]}">
+                </label>`
+              );
+            }
+      
+            output.push(
+              `<div class="question"> ${currentQuestion.question} </div>
+              <div class="answers"> ${answers.join('')} </div>`
+            );
+          }
+        );
+    quizContainer.innerHTML = output.join('');
 }
-
 // ****** Display Results
 function showResults() {
 
@@ -86,4 +106,4 @@ function showResults() {
 buildQuiz()
 
 // ****** Event Listeners
-submitButton.addEventListener('click', showResults)
+submitButton.addEventListener('click', showResults);
