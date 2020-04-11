@@ -4,6 +4,7 @@ var quizContainer = document.getElementById('quiz');
 var resultsContainer = document.getElementById('results');
 var submitButton = document.getElementById('submit');
 
+
 // ****** Quiz Array
 var codeQuestions = [
     {
@@ -59,17 +60,6 @@ var codeQuestions = [
             d: "JavaScript"
         },
         correctAnswer: "a"
-    },
-    
-    {
-        question: "Arrays in JavaScript can be used to store _______.",
-        answers: {
-            a: "Numbers and Strings",
-            b: "Other Arrays",
-            c: "Booleans",
-            d: "All of the above"
-        },
-        correctAnswer: "d"
     }
 ]
 
@@ -78,21 +68,23 @@ function buildQuiz() {
     var output = [];
     codeQuestions.forEach(
         (currentQuestion, questionNumber) => {
+            var answers = [];    
 
-            var answers = [];
-      
             for(letter in currentQuestion.answers){
-      
-              answers.push(
+                answers.push(
                 `<label>
-                  <input type="button" name="question${questionNumber}" value="${currentQuestion.answers[letter]}">
+                <input type="radio" name="question${questionNumber}" value="${letter}">
+                ${letter} :
+                ${currentQuestion.answers[letter]}
                 </label>`
-              );
+                );
             }
       
             output.push(
-              `<div class="question"> ${currentQuestion.question} </div>
-              <div class="answers"> ${answers.join('')} </div>`
+              `<div class="slide">
+                <div class="question"> ${currentQuestion.question} </div>
+                <div class="answers"> ${answers.join('')} </div>
+              </div>`
             );
           }
         );
@@ -100,8 +92,28 @@ function buildQuiz() {
 }
 // ****** Display Results
 function showResults() {
+var answerContainers = quizContainer.querySelectorAll('.answers');
+let numCorrect = 0;
 
+    codeQuestions.forEach( (currentQuestion, questionNumber) => {
+        var answerContainer = answerContainers[questionNumber];
+        var selector = `input[name=question${questionNumber}]:checked`;
+        var userAnswer = (answerContainer.querySelector(selector) || {}).value;
+
+        if(userAnswer === currentQuestion.correctAnswer){
+            numCorrect++;
+         //   answerContainer(questionNumber).style.color = 'lightgreen';
+        }
+
+        else{
+        //   answerContainer[questionNumber].style.color = "red";
+        }
+    });
+
+    resultsContainer.innerHTML = `${numCorrect} out of ${codeQuestions.length}`;
 }
+
+
 
 buildQuiz()
 
