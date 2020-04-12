@@ -64,8 +64,10 @@ var codeQuestions = [
 
 
 
-// ****** Build the Quiz
+
 function generateQuiz(questions, quizContainer, resultsContainer, submitButton) {
+    
+    // ****** Build the Quiz
     function showQuestions(questions, quizContainer){
         var output = [];
         var answers;
@@ -94,6 +96,7 @@ function generateQuiz(questions, quizContainer, resultsContainer, submitButton) 
         quizContainer.innerHTML = output.join('');
     }
 
+    // ****** display results
     function showResults(questions, quizContainer, resultsContainer) {
         var answerContainers = quizContainer.querySelectorAll('.answers');
 	
@@ -107,10 +110,10 @@ function generateQuiz(questions, quizContainer, resultsContainer, submitButton) 
             if(userAnswer===questions[i].correctAnswer){
                 numCorrect++;
                 
-                answerContainers[i].style.color = 'lightgreen';
+             
             }
             else{
-                answerContainers[i].style.color = 'red';
+               
             }
         }
     
@@ -124,5 +127,40 @@ function generateQuiz(questions, quizContainer, resultsContainer, submitButton) 
     }  
 
 }
+
+function slide() {
+    var indvQuestion = codeQuestions[0];
+    var currentQuestion = document.getElementById("quiz");
+    currentQuestion.textContent = indvQuestion.question;
+
+
+    var indivAnswer = codeQuestions.question[0];
+    var currentAnswer = document.getElementById("answerChoices");
+    currentQuestion.textContent = indvQuestion.question.answers;
+    
+    indvQuestion.question.forEach(function (q, i) {
+        var buttonChoice = document.createElement("button");
+        buttonChoice.textContent = q;
+        buttonChoice.onclick = nextQuestion;
+    })
+}
+
+// function nextQuestion() {
+
+
+// }
+
+// function timer() {
+//     var timeLeft = 30;
+//     var timerEl = document.createElement('h1');
+
+//     var timeInterval = setInterval(function () {
+
+//     })
+// }
+
+
+slide();
+
 
 generateQuiz(codeQuestions, quizContainer, resultsContainer, submitButton);
