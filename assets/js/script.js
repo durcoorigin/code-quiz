@@ -160,7 +160,7 @@ function slide() {
 // }
 
 
-slide();
+// slide();
 
 
 generateQuiz(codeQuestions, quizContainer, resultsContainer, submitButton);
