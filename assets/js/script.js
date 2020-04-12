@@ -1,12 +1,8 @@
-
 // ****** Global Variables
+
 var quizContainer = document.getElementById('quiz');
 var resultsContainer = document.getElementById('results');
 var submitButton = document.getElementById('submit');
-var previousButton = document.getElementById('previous');
-var nextButton = document.getElementById('next');
-var slides = document.querySelectorAll(".slide");
-let currentSlide = 0;
 
 // ****** Quiz Array
 var codeQuestions = [
@@ -63,96 +59,70 @@ var codeQuestions = [
             d: "JavaScript"
         },
         correctAnswer: "a"
-    }
+    },
 ]
 
-// ****** Build the Quiz
-function buildQuiz() {
-    var output = [];
-    codeQuestions.forEach(
-        (currentQuestion, questionNumber) => {
-            var answers = [];    
 
-            for(letter in currentQuestion.answers){
+
+// ****** Build the Quiz
+function generateQuiz(questions, quizContainer, resultsContainer, submitButton) {
+    function showQuestions(questions, quizContainer){
+        var output = [];
+        var answers;
+    
+        for(var i=0; i<questions.length; i++){
+            
+            answers = [];
+    
+            for(letter in questions[i].answers){
+    
                 answers.push(
-                `<label>
-                <input type="radio" name="question${questionNumber}" value="${letter}">
-                ${letter} :
-                ${currentQuestion.answers[letter]}
-                </label>`
+                    '<label>'
+                        + '<input type="radio" name="question'+i+'" value="'+letter+'">'
+                        + letter + ': '
+                        + questions[i].answers[letter]
+                    + '</label>'
                 );
             }
-      
-            output.push(
-              `<div class="slide">
-                <div class="question"> ${currentQuestion.question} </div>
-                <div class="answers"> ${answers.join('')} </div>
-              </div>`
-            );
-          }
-        );
-    quizContainer.innerHTML = output.join('');
-}
-// ****** Display Results
-function showResults() {
-var answerContainers = quizContainer.querySelectorAll('.answers');
-let numCorrect = 0;
-
-    codeQuestions.forEach( (currentQuestion, questionNumber) => {
-        var answerContainer = answerContainers[questionNumber];
-        var selector = `input[name=question${questionNumber}]:checked`;
-        var userAnswer = (answerContainer.querySelector(selector) || {}).value;
-
-        if(userAnswer === currentQuestion.correctAnswer){
-            numCorrect++;
-         //   answerContainer(questionNumber).style.color = 'lightgreen';
-        }
-
-        else{
-        //   answerContainer[questionNumber].style.color = "red";
-        }
-    });
-
-    resultsContainer.innerHTML = `${numCorrect} out of ${codeQuestions.length}`;
-}
-
-function showSlide(n) {
-    slides[currentSlide].classList.remove('active-slide');
-    slides[n].classList.add('active-slide');
-    currentSlide = n;
     
-    if(currentSlide === 0){
-        previousButton.style.display = 'none';        
+            output.push(
+                '<div class="question">' + questions[i].question + '</div>'
+                + '<div class="answers">' + answers.join('') + '</div>'
+            );
+        }
+    
+        quizContainer.innerHTML = output.join('');
     }
 
-    else{
-        previousButton.style.display = 'inline-block';
+    function showResults(questions, quizContainer, resultsContainer) {
+        var answerContainers = quizContainer.querySelectorAll('.answers');
+	
+        var userAnswer = '';
+        var numCorrect = 0;
+        
+        for(var i=0; i<questions.length; i++){
+    
+            userAnswer = (answerContainers[i].querySelector('input[name=question'+i+']:checked')||{}).value;
+            
+            if(userAnswer===questions[i].correctAnswer){
+                numCorrect++;
+                
+                answerContainers[i].style.color = 'lightgreen';
+            }
+            else{
+                answerContainers[i].style.color = 'red';
+            }
+        }
+    
+        resultsContainer.innerHTML = numCorrect + ' out of ' + questions.length;
     }
 
-    if(currentSlide === slides.length-1) {
-        nextButton.style.display = 'none';
-        submitButton.style.display = 'inline-block';
-    }
+    showQuestions(questions, quizContainer);
 
-    else{
-        nextButton.style.display = 'inline-block';
-        submitButton.style.display = 'none';
-      }
+    submitButton.onclick = function() {
+        showResults(questions, quizContainer, resultsContainer);
+    }  
+
 }
 
-showSlide(currentSlide);
-
-function showNextSlide() {
-    showSlide(currentSlide + 1);
-  }
-  
-  function showPreviousSlide() {
-    showSlide(currentSlide - 1);
-  }
-
-buildQuiz()
-
-// ****** Event Listeners
-submitButton.addEventListener('click', showResults);
-previousButton.addEventListener("click", showPreviousSlide);
-nextButton.addEventListener("click", showNextSlide);
+generateQuiz(codeQuestions, quizContainer, resultsContainer, submitButton);
